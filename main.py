@@ -3,7 +3,8 @@ from fastapi.staticfiles import StaticFiles
 
 from routers.analysis import router as analysis_router
 from routers.fasta import router as fasta_router
-
+from ml_model import predict_sequence
+from models import DNASequence
 
 app = FastAPI(
     title="BioSequence Analyzer API",
@@ -37,3 +38,10 @@ def home():
     return {
         "message": "Welcome to BioSequence Analyzer API!"
     }
+@app.post("/predict")
+def predict_dna(data: DNASequence):
+    result = predict_sequence(data.sequence)
+    return {
+        "sequence": data.sequence,
+        **result
+}
